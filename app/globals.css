@@ -1,26 +1,153 @@
 @import "tailwindcss";
 
+/* ── Design System ─────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #121212;
+  --bg-card: rgba(255, 255, 255, 0.03);
+  --bg-card-hover: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.06);
+  --border-hover: rgba(255, 255, 255, 0.12);
+
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --text-muted: #6b6b6b;
+
+  --p1-accent: #22d3ee;       /* cyan-400 */
+  --p1-accent-bg: rgba(34, 211, 238, 0.08);
+  --p1-accent-border: rgba(34, 211, 238, 0.2);
+
+  --p2-accent: #a78bfa;       /* violet-400 */
+  --p2-accent-bg: rgba(167, 139, 250, 0.08);
+  --p2-accent-border: rgba(167, 139, 250, 0.2);
+
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg-primary);
+  --color-foreground: var(--text-primary);
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Film Grain Overlay ────────────────────────────────────── */
+.film-grain::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ── Base Styles ───────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Glass Card ────────────────────────────────────────────── */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-hover);
+}
+
+/* ── Glow Effects ──────────────────────────────────────────── */
+.glow-cyan {
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.1),
+              0 0 40px rgba(34, 211, 238, 0.05);
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px rgba(167, 139, 250, 0.1),
+              0 0 40px rgba(167, 139, 250, 0.05);
+}
+
+.glow-border-cyan:hover {
+  border-color: rgba(34, 211, 238, 0.3);
+  box-shadow: 0 0 25px rgba(34, 211, 238, 0.1),
+              0 0 50px rgba(34, 211, 238, 0.05);
+}
+
+.glow-border-purple:hover {
+  border-color: rgba(167, 139, 250, 0.3);
+  box-shadow: 0 0 25px rgba(167, 139, 250, 0.1),
+              0 0 50px rgba(167, 139, 250, 0.05);
+}
+
+/* ── Marquee Animation ─────────────────────────────────────── */
+.marquee-track {
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-animate {
+  animation: marquee 30s linear infinite;
+}
+
+.marquee-animate:hover {
+  animation-play-state: paused;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ── Selection ─────────────────────────────────────────────── */
+::selection {
+  background: rgba(34, 211, 238, 0.2);
+  color: white;
 }
